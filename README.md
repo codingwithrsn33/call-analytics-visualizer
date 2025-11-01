@@ -127,8 +127,8 @@ Full CI/CD deployment using Vercel
 
 👨‍💻 Author
 
-Rohan S.
-Frontend Developer | Python + Django Enthusiast | AI Developer in Progress
+Rohan Subhash Darekar
+Full Stack Python Developer | AI Developer in Progress
 
 📧 Email: rohandarekar307@gmail.com
 
