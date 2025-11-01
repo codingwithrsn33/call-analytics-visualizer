@@ -66,7 +66,13 @@ chart_values	json	Stores chart data
 
 Then, in your project root, create a .env file:
 
-REACT_APP_SUPABASE_URL= https://tgqdaayhmhjtjpaytwzb.supabase.co
+### 🔗 Supabase Project
+The project uses Supabase as the backend for storing user chart data.
+
+**Supabase API URL:** `https://tgqdaayhmhjtjpaytwzb.supabase.co`
+
+*(Note: This endpoint is for API access, not for public viewing. Data is securely managed via the app.)*
+
 🧠 How It Works
 
 User enters their email to continue.
@@ -124,7 +130,7 @@ Full CI/CD deployment using Vercel
 Rohan S.
 Frontend Developer | Python + Django Enthusiast | AI Developer in Progress
 
-📧 Email: rohan@example.com
+📧 Email: rohandarekar307@gmail.com
 
 🌐 GitHub: codingwithrsn33
 
