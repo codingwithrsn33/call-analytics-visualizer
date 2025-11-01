@@ -66,8 +66,8 @@ chart_values	json	Stores chart data
 
 Then, in your project root, create a .env file:
 
-REACT_APP_SUPABASE_URL=https://your-project.supabase.co
-REACT_APP_SUPABASE_KEY=your_anon_public_key
+REACT_APP_SUPABASE_URL=[[https://your-project.supabase.co](https://tgqdaayhmhjtjpaytwzb.supabase.co)](https://tgqdaayhmhjtjpaytwzb.supabase.co)
+REACT_APP_SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRncWRhYXlobWhqdGpwYXl0d3piIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE5ODIyMDEsImV4cCI6MjA3NzU1ODIwMX0.1ntLk9-c5RCtU9JVv2SCu1RSNpRthC2hDoI4XiB30Wg
 
 🧠 How It Works
 
