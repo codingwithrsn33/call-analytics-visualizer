@@ -1,46 +1,133 @@
-# Getting Started with Create React App
+🎧 Voice Agent Analytics Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern React + TypeScript web application to visualize and manage voice agent analytics, inspired by the design system of SuperBryn
+.
 
-## Available Scripts
+🔗 Live Demo: https://call-analytics-visualizer.vercel.app/
 
-In the project directory, you can run:
+🧠 Project Overview
 
-### `npm start`
+This dashboard helps visualize call analytics for AI voice agents, including call duration trends and failure causes (“sad paths”).
+Users can update chart values in real time, store their custom data securely in Supabase, and restore previous values upon login.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+✨ Features
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+✅ SuperBryn-style theme — sleek dark mode with glowing green accents
+✅ 📈 Interactive Charts — visualize call duration & sad path analytics
+✅ 💾 Supabase Integration — save and fetch data per email address
+✅ ⚡ Real-time updates — instantly reflects changes on charts
+✅ 🔐 Smart overwrite prompt — asks before replacing previous data
+✅ 🌐 Deployed on Vercel — responsive, fast, and globally available
 
-### `npm test`
+🧩 Tech Stack
+Category	Technology
+Frontend Framework	React 18 + TypeScript
+Data Visualization	Recharts
+Backend / Database	Supabase (PostgreSQL)
+Styling	Custom CSS with Superbryn-inspired layout
+Deployment	Vercel Cloud
+Version Control	Git + GitHub
+🖥️ Live Demo
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+🌐 Hosted App:
+👉 https://call-analytics-visualizer.vercel.app/
 
-### `npm run build`
+🧱 GitHub Repo:
+👉 https://github.com/codingwithrsn33/call-analytics-visualizer
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+🧰 Installation Guide
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+To run this project locally:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# 1️⃣ Clone the repository
+git clone https://github.com/codingwithrsn33/call-analytics-visualizer.git
 
-### `npm run eject`
+# 2️⃣ Navigate into the folder
+cd call-analytics-visualizer
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+# 3️⃣ Install dependencies
+npm install
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# 4️⃣ Start the development server
+npm start
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Your app will be running at 👉 http://localhost:3000/
 
-## Learn More
+⚙️ Supabase Setup
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Create a new table called call_data in your Supabase project:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Column	Type	Description
+id	int4	Primary Key
+created_at	timestamp	Default: now()
+email	text	User email
+chart_values	json	Stores chart data
+
+Then, in your project root, create a .env file:
+
+REACT_APP_SUPABASE_URL=https://your-project.supabase.co
+REACT_APP_SUPABASE_KEY=your_anon_public_key
+
+🧠 How It Works
+
+User enters their email to continue.
+
+App checks if previous chart data exists in Supabase.
+
+If yes — shows a summary and asks permission to overwrite.
+
+User edits data → clicks “Save My Data” → data stored in Supabase.
+
+Next login → dashboard loads previous saved data automatically.
+
+📊 Analytics Visualization
+Call Duration Analysis
+
+Displays the average duration of voice calls (line chart).
+
+Users can modify values and instantly see updated graphs.
+
+Sad Path Analysis
+
+Visualizes call failure reasons (pie chart).
+
+Uses color-coded sections for each issue category.
+
+🌐 Deployment
+
+The app is deployed via Vercel Cloud for fast, serverless hosting.
+
+To deploy your own version:
+
+npm run build
+
+
+Then push your project to GitHub and connect it to Vercel
+.
+Vercel auto-detects React apps and deploys them with a live HTTPS link.
+
+🏁 Summary
+
+This project demonstrates:
+
+Frontend expertise with React + TypeScript
+
+Integration of cloud database (Supabase)
+
+Real-time data visualization using Recharts
+
+Elegant UI/UX inspired by SuperBryn
+
+Full CI/CD deployment using Vercel
+
+👨‍💻 Author
+
+Rohan S.
+Frontend Developer | Python + Django Enthusiast | AI Developer in Progress
+
+📧 Email: rohan@example.com
+
+🌐 GitHub: codingwithrsn33
+
+🚀 Live App: call-analytics-visualizer.vercel.app
