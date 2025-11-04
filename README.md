@@ -66,12 +66,17 @@ chart_values	json	Stores chart data
 
 Then, in your project root, create a .env file:
 
+<<<<<<< HEAD
 ### 🔗 Supabase Project
 The project uses Supabase as the backend for storing user chart data.
 
 **Supabase API URL:** `https://tgqdaayhmhjtjpaytwzb.supabase.co`
 
 *(Note: This endpoint is for API access, not for public viewing. Data is securely managed via the app.)*
+=======
+REACT_APP_SUPABASE_URL=https://your-project.supabase.co
+REACT_APP_SUPABASE_KEY=your_anon_public_key
+>>>>>>> 321f519 (Updated charts, added editable data & Supabase integration)
 
 🧠 How It Works
 
@@ -127,6 +132,7 @@ Full CI/CD deployment using Vercel
 
 👨‍💻 Author
 
+<<<<<<< HEAD
 Rohan Subhash Darekar
 Full Stack Python Developer | AI Developer in Progress
 
@@ -135,3 +141,13 @@ Full Stack Python Developer | AI Developer in Progress
 🌐 GitHub: codingwithrsn33
 
 🚀 Live App: call-analytics-visualizer.vercel.app
+=======
+Rohan S.
+Frontend Developer | Python + Django Enthusiast | AI Developer in Progress
+
+📧 Email: rohan@example.com
+
+🌐 GitHub: codingwithrsn33
+
+🚀 Live App: call-analytics-visualizer.vercel.app
+>>>>>>> 321f519 (Updated charts, added editable data & Supabase integration)
