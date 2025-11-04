@@ -261,6 +261,7 @@ const App: React.FC = () => {
   </div>
 </section>
 
+
           
 
          <section style={{ textAlign: "center", marginTop: "60px" }}>
@@ -329,6 +330,7 @@ const App: React.FC = () => {
     marginBottom: "5px",
   }}
 />
+
 
       </PieChart>
     </ResponsiveContainer>
