@@ -253,56 +253,60 @@ const App: React.FC = () => {
     📉 Sad Path Analysis
   </h2>
 
-  <PieChart width={600} height={400}>
-    <defs>
-      <linearGradient id="pieGradient" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="#00ffae" />
-        <stop offset="100%" stopColor="#0077b6" />
-      </linearGradient>
-    </defs>
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      overflowX: "auto", // prevents text clipping on smaller screens
+    }}
+  >
+    <PieChart width={650} height={420}>
+      <defs>
+        <linearGradient id="pieGradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#00ffae" />
+          <stop offset="100%" stopColor="#0077b6" />
+        </linearGradient>
+      </defs>
 
-    <Pie
-  data={sadPathData}
-  dataKey="value"
-  nameKey="issue"
-  cx="50%"
-  cy="50%"
-  innerRadius={60}
-  outerRadius={120}
-  paddingAngle={3}
-  stroke="#0a0a0a"
-  strokeWidth={2}
-  labelLine={false}
-  label={(entry: any) => {
-    const percent = entry.percent ?? 0;
-    const name = entry.name ?? "";
-    return `${name} (${(percent * 100).toFixed(0)}%)`;
-  }}
->
-  {sadPathData.map((_, index) => (
-    <Cell
-      key={`cell-${index}`}
-      fill={`url(#pieGradient)`}
-      opacity={0.9}
-    />
-  ))}
-</Pie>
+      <Pie
+        data={sadPathData}
+        dataKey="value"
+        nameKey="issue"
+        cx="50%"
+        cy="50%"
+        innerRadius={80}
+        outerRadius={150}
+        paddingAngle={4}
+        stroke="#0a0a0a"
+        strokeWidth={2}
+        labelLine={false}
+        label={({ name, percent }) =>
+          `${name} (${(percent * 100).toFixed(0)}%)`
+        }
+      >
+        {sadPathData.map((_, index) => (
+          <Cell
+            key={`cell-${index}`}
+            fill="url(#pieGradient)"
+            opacity={0.9}
+          />
+        ))}
+      </Pie>
 
-    <Tooltip
-      contentStyle={{
-        backgroundColor: "#111",
-        border: "1px solid #00ffae",
-        borderRadius: "8px",
-        color: "#fff",
-        fontSize: "0.9rem",
-      }}
-      formatter={(value: number, name: string) => [
-        `${value}`,
-        `${name.charAt(0).toUpperCase() + name.slice(1)}`,
-      ]}
-    />
-  </PieChart>
+      <Tooltip
+        contentStyle={{
+          backgroundColor: "#0b0b0b",
+          border: "1px solid #00ffae",
+          borderRadius: "8px",
+          color: "#fff",
+          fontSize: "0.9rem",
+        }}
+      />
+    </PieChart>
+  </div>
 </section>
+
 
 
 
