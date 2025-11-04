@@ -1,3 +1,4 @@
+import { ResponsiveContainer } from "recharts";
 import React, { useState, useEffect } from "react";
 import {
   LineChart,
@@ -135,7 +136,6 @@ const App: React.FC = () => {
   });
 };
 
-
   return (
     <div
       className="main"
@@ -214,41 +214,56 @@ const App: React.FC = () => {
       ) : (
         <>
           <section style={{ textAlign: "center", marginTop: "50px" }}>
-            <h2>📊 Call Duration Analysis</h2>
-            <LineChart width={600} height={300} data={callData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-              <XAxis dataKey="name" stroke="#aaa" />
-              <YAxis stroke="#aaa" />
-              <Tooltip />
-              <Line type="monotone" dataKey="duration" stroke="#00ffae" />
-            </LineChart>
+  <h2 style={{ color: "#00ffae", marginBottom: "20px" }}>
+    📊 Call Duration Analysis
+  </h2>
 
-            <div className="input-section" style={{ marginTop: "20px" }}>
-              {callData.map((d, i) => (
-                <div key={i}>
-                  {d.name}:{" "}
-                  <input
-                    type="number"
-                    value={d.duration}
-                    onChange={(e) =>
-                      handleDurationChange(i, Number(e.target.value))
-                    }
-                    style={{
-                      background: "#111",
-                      color: "#00ffae",
-                      border: "1px solid #00ffae",
-                      borderRadius: "5px",
-                      padding: "5px 10px",
-                      marginBottom: "5px",
-                    }}
-                  />{" "}
-                  min
-                </div>
-              ))}
-            </div>
-          </section>
+  <div style={{ width: "100%", height: 300, display: "flex", justifyContent: "center" }}>
+    <LineChart width={600} height={300} data={callData}>
+      <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+      <XAxis dataKey="name" stroke="#aaa" />
+      {/* ✅ Automatically scales when user enters larger values */}
+      <YAxis stroke="#aaa" domain={[0, "dataMax + 20"]} />
+      <Tooltip />
+      <Line
+        type="monotone"
+        dataKey="duration"
+        stroke="#00ffae"
+        strokeWidth={2}
+        dot={{ r: 5 }}
+        activeDot={{ r: 8 }}
+      />
+    </LineChart>
+  </div>
 
-          <section style={{ textAlign: "center", marginTop: "60px" }}>
+  <div className="input-section" style={{ marginTop: "20px" }}>
+    {callData.map((d, i) => (
+      <div key={i}>
+        {d.name}:{" "}
+        <input
+          type="number"
+          value={d.duration}
+          onChange={(e) => handleDurationChange(i, Number(e.target.value))}
+          style={{
+            background: "#111",
+            color: "#00ffae",
+            border: "1px solid #00ffae",
+            borderRadius: "5px",
+            padding: "5px 10px",
+            marginBottom: "5px",
+            width: "80px",
+            textAlign: "center",
+          }}
+        />{" "}
+        min
+      </div>
+    ))}
+  </div>
+</section>
+
+          
+
+         <section style={{ textAlign: "center", marginTop: "60px" }}>
   <h2 style={{ color: "#00ffae", marginBottom: "20px" }}>
     📉 Sad Path Analysis
   </h2>
@@ -258,54 +273,68 @@ const App: React.FC = () => {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      overflowX: "auto", // prevents text clipping on smaller screens
+      overflowX: "auto",
+      width: "100%",
     }}
   >
-    <PieChart width={650} height={420}>
-      <defs>
-        <linearGradient id="pieGradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#00ffae" />
-          <stop offset="100%" stopColor="#0077b6" />
-        </linearGradient>
-      </defs>
+    <ResponsiveContainer width="80%" height={420}>
+      <PieChart>
+        <defs>
+          <linearGradient id="pieGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#00ffae" />
+            <stop offset="100%" stopColor="#0077b6" />
+          </linearGradient>
+        </defs>
 
-      <Pie
-        data={sadPathData}
-        dataKey="value"
-        nameKey="issue"
-        cx="50%"
-        cy="50%"
-        innerRadius={80}
-        outerRadius={150}
-        paddingAngle={4}
-        stroke="#0a0a0a"
-        strokeWidth={2}
-        labelLine={false}
-        label={({ name, percent }) =>
-          `${name} (${(percent * 100).toFixed(0)}%)`
-        }
-      >
-        {sadPathData.map((_, index) => (
-          <Cell
-            key={`cell-${index}`}
-            fill="url(#pieGradient)"
-            opacity={0.9}
-          />
-        ))}
-      </Pie>
+        <Pie
+          data={sadPathData}
+          dataKey="value"
+          nameKey="issue"
+          cx="50%"
+          cy="50%"
+          innerRadius="40%"
+          outerRadius="60%"
+          paddingAngle={4}
+          stroke="#0a0a0a"
+          strokeWidth={2}
+          labelLine={false}
+          label={(entry: any) => {
+            const name = entry.name ?? "";
+            const percent = typeof entry.percent === "number" ? entry.percent : 0;
+            return `${name} (${(percent * 100).toFixed(0)}%)`;
+          }}
+        >
+          {sadPathData.map((_, index) => (
+            <Cell key={`cell-${index}`} fill="url(#pieGradient)" opacity={0.9} />
+          ))}
+        </Pie>
 
-      <Tooltip
-        contentStyle={{
-          backgroundColor: "#0b0b0b",
-          border: "1px solid #00ffae",
-          borderRadius: "8px",
-          color: "#fff",
-          fontSize: "0.9rem",
-        }}
-      />
-    </PieChart>
+        <Tooltip
+  contentStyle={{
+    background: "rgba(0, 20, 30, 0.95)",
+    border: "1px solid #00ffae",
+    borderRadius: "10px",
+    color: "#e6f9f5",
+    fontSize: "0.9rem",
+    padding: "10px 15px",
+    boxShadow: "0 4px 10px rgba(0, 255, 174, 0.2)",
+  }}
+  itemStyle={{
+    color: "#00ffae",
+    fontWeight: 500,
+  }}
+  labelStyle={{
+    color: "#fff",
+    fontWeight: 600,
+    marginBottom: "5px",
+  }}
+/>
+
+      </PieChart>
+    </ResponsiveContainer>
   </div>
 </section>
+
 
 
 
@@ -388,3 +417,6 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+
+
