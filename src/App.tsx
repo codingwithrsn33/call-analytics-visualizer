@@ -40,7 +40,6 @@ const App: React.FC = () => {
 
   // Fetch user data from Supabase
   const fetchUserData = async (email: string) => {
-    console.log("🔍 Fetching data for:", email);
     const { data, error } = await supabase
       .from("call_data")
       .select("chart_values")
@@ -53,7 +52,6 @@ const App: React.FC = () => {
     }
 
     if (data?.chart_values) {
-      console.log("✅ Found previous data:", data.chart_values);
       setPreviousData(data.chart_values);
       setCallData(data.chart_values.callData || defaultDuration);
       setSadPathData(data.chart_values.sadPathData || defaultSadPath);
@@ -68,18 +66,12 @@ const App: React.FC = () => {
     }
 
     try {
-      const { data: existing, error: fetchError } = await supabase
+      const { data: existing } = await supabase
         .from("call_data")
         .select("*")
         .eq("email", email)
         .limit(1)
         .single();
-
-      if (fetchError && fetchError.code !== "PGRST116") {
-        console.error("Fetch error:", fetchError);
-        alert("❌ Error checking user record: " + fetchError.message);
-        return;
-      }
 
       const chartValues = { callData, sadPathData };
 
@@ -95,7 +87,6 @@ const App: React.FC = () => {
           .eq("email", email);
 
         if (updateError) throw updateError;
-
         alert("✅ Data updated successfully!");
       } else {
         const { error: insertError } = await supabase
@@ -103,11 +94,9 @@ const App: React.FC = () => {
           .insert([{ email, chart_values: chartValues }]);
 
         if (insertError) throw insertError;
-
         alert("✅ Data saved successfully!");
       }
     } catch (err: any) {
-      console.error("Save failed:", err);
       alert("❌ Save failed: " + err.message);
     }
 
@@ -118,11 +107,34 @@ const App: React.FC = () => {
     if (email) fetchUserData(email);
   }, [email]);
 
+  // 👇 FIXED: Deep copy ensures React re-renders chart instantly
   const handleDurationChange = (index: number, value: number) => {
-    const updated = [...callData];
-    updated[index].duration = value;
-    setCallData(updated);
-  };
+  setCallData((prevData) => {
+    const updated = prevData.map((item, i) =>
+      i === index ? { ...item, duration: Number(value) } : item
+    );
+
+    // 🧠 Recalculate Sad Path Pie chart dynamically
+    const totalDuration = updated.reduce((sum, d) => sum + d.duration, 0);
+
+    const newSadPathData = [
+      { issue: "User refused ID", value: Math.round((updated[0].duration / totalDuration) * 100) || 0 },
+      { issue: "Caller identification", value: Math.round((updated[1].duration / totalDuration) * 100) || 0 },
+      { issue: "Unsupported Language", value: Math.round((updated[2].duration / totalDuration) * 100) || 0 },
+      { issue: "Hostility", value: Math.round((updated[3].duration / totalDuration) * 100) || 0 },
+      { issue: "Other", value: Math.max(0, 100 -
+        (Math.round((updated[0].duration / totalDuration) * 100) +
+         Math.round((updated[1].duration / totalDuration) * 100) +
+         Math.round((updated[2].duration / totalDuration) * 100) +
+         Math.round((updated[3].duration / totalDuration) * 100))
+      ) },
+    ];
+
+    setSadPathData(newSadPathData);
+    return updated;
+  });
+};
+
 
   return (
     <div
@@ -134,7 +146,6 @@ const App: React.FC = () => {
         fontFamily: "'Inter', sans-serif",
       }}
     >
-      {/* ✅ Navbar like Superbryn */}
       <nav
         style={{
           display: "flex",
@@ -150,62 +161,11 @@ const App: React.FC = () => {
       >
         <h2 style={{ color: "#00ffae", fontWeight: 700 }}>SuperBryn Analytics</h2>
         <div>
-          <a
-            href="#"
-            style={{
-              color: "#ccc",
-              marginRight: "20px",
-              textDecoration: "none",
-            }}
-          >
-            Home
-          </a>
-          <a href="#" style={{ color: "#ccc", textDecoration: "none" }}>
-            About
-          </a>
+          <a href="#" style={{ color: "#ccc", marginRight: "20px" }}>Home</a>
+          <a href="#" style={{ color: "#ccc" }}>About</a>
         </div>
       </nav>
 
-      {/* ✅ Hero section */}
-      <section
-        style={{
-          textAlign: "center",
-          marginTop: "60px",
-          marginBottom: "50px",
-        }}
-      >
-        <h1
-          style={{
-            fontSize: "2.4rem",
-            color: "#fff",
-            fontWeight: 700,
-            textShadow: "0 0 10px rgba(0,255,174,0.8)",
-          }}
-        >
-          Helping Teams Scale{" "}
-          <span style={{ color: "#00ffae" }}>Voice AI</span>
-        </h1>
-        <p style={{ color: "#aaa", fontSize: "1.1rem" }}>
-          Visualize and track your voice agent analytics effortlessly.
-        </p>
-        <button
-          style={{
-            marginTop: "20px",
-            backgroundColor: "#00ffae",
-            color: "#000",
-            border: "none",
-            padding: "10px 25px",
-            borderRadius: "8px",
-            fontWeight: 600,
-            cursor: "pointer",
-          }}
-          onClick={() => window.scrollTo({ top: 500, behavior: "smooth" })}
-        >
-          Get Started
-        </button>
-      </section>
-
-      {/* ✅ Email prompt */}
       {showPrompt ? (
         <div
           className="email-box"
@@ -216,6 +176,7 @@ const App: React.FC = () => {
             borderRadius: "10px",
             width: "400px",
             margin: "auto",
+            marginTop: "100px",
           }}
         >
           <h3>Enter your email to continue:</h3>
@@ -252,8 +213,7 @@ const App: React.FC = () => {
         </div>
       ) : (
         <>
-          {/* ✅ Charts */}
-          <section style={{ textAlign: "center", marginTop: "30px" }}>
+          <section style={{ textAlign: "center", marginTop: "50px" }}>
             <h2>📊 Call Duration Analysis</h2>
             <LineChart width={600} height={300} data={callData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#333" />
@@ -273,6 +233,14 @@ const App: React.FC = () => {
                     onChange={(e) =>
                       handleDurationChange(i, Number(e.target.value))
                     }
+                    style={{
+                      background: "#111",
+                      color: "#00ffae",
+                      border: "1px solid #00ffae",
+                      borderRadius: "5px",
+                      padding: "5px 10px",
+                      marginBottom: "5px",
+                    }}
                   />{" "}
                   min
                 </div>
@@ -280,32 +248,66 @@ const App: React.FC = () => {
             </div>
           </section>
 
-          <section style={{ textAlign: "center", marginTop: "40px" }}>
-            <h2>📉 Sad Path Analysis</h2>
-            <PieChart width={400} height={300}>
-              <Pie
-                data={sadPathData}
-                dataKey="value"
-                nameKey="issue"
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                fill="#00ffae"
-                label
-              >
-                {sadPathData.map((_, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-            </PieChart>
-          </section>
+          <section style={{ textAlign: "center", marginTop: "60px" }}>
+  <h2 style={{ color: "#00ffae", marginBottom: "20px" }}>
+    📉 Sad Path Analysis
+  </h2>
+
+  <PieChart width={600} height={400}>
+    <defs>
+      <linearGradient id="pieGradient" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#00ffae" />
+        <stop offset="100%" stopColor="#0077b6" />
+      </linearGradient>
+    </defs>
+
+    <Pie
+  data={sadPathData}
+  dataKey="value"
+  nameKey="issue"
+  cx="50%"
+  cy="50%"
+  innerRadius={60}
+  outerRadius={120}
+  paddingAngle={3}
+  stroke="#0a0a0a"
+  strokeWidth={2}
+  labelLine={false}
+  label={(entry: any) => {
+    const percent = entry.percent ?? 0;
+    const name = entry.name ?? "";
+    return `${name} (${(percent * 100).toFixed(0)}%)`;
+  }}
+>
+  {sadPathData.map((_, index) => (
+    <Cell
+      key={`cell-${index}`}
+      fill={`url(#pieGradient)`}
+      opacity={0.9}
+    />
+  ))}
+</Pie>
+
+    <Tooltip
+      contentStyle={{
+        backgroundColor: "#111",
+        border: "1px solid #00ffae",
+        borderRadius: "8px",
+        color: "#fff",
+        fontSize: "0.9rem",
+      }}
+      formatter={(value: number, name: string) => [
+        `${value}`,
+        `${name.charAt(0).toUpperCase() + name.slice(1)}`,
+      ]}
+    />
+  </PieChart>
+</section>
+
+
 
           <div style={{ textAlign: "center", marginTop: "20px" }}>
             <button
-              className="save-btn"
               onClick={saveUserData}
               style={{
                 backgroundColor: "#00ffae",
@@ -321,8 +323,7 @@ const App: React.FC = () => {
             </button>
           </div>
 
-          {/* ✅ Expandable Previous Data */}
-          {previousData && previousData.callData && previousData.sadPathData && (
+          {previousData && (
             <div
               className="prev"
               style={{
@@ -334,12 +335,9 @@ const App: React.FC = () => {
                 padding: "15px",
                 maxWidth: "600px",
                 marginInline: "auto",
-                boxShadow: "0 0 10px rgba(0, 208, 132, 0.3)",
               }}
             >
-              <h4 style={{ color: "#00d084", marginBottom: "10px" }}>
-                📁 Previous Saved Data Found
-              </h4>
+              <h4 style={{ color: "#00d084" }}>📁 Previous Saved Data Found</h4>
               <p style={{ color: "#ccc" }}>
                 You previously saved{" "}
                 <strong>{previousData.callData.length}</strong> calls and{" "}
@@ -372,7 +370,6 @@ const App: React.FC = () => {
                     borderRadius: "10px",
                     marginTop: "15px",
                     overflowX: "auto",
-                    fontSize: "0.9rem",
                   }}
                 >
                   {JSON.stringify(previousData, null, 2)}
